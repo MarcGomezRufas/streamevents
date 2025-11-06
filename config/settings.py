@@ -127,14 +127,23 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 
-MEDIA_URL = '/media/'  # MOD: Suport fitxers pujats
-MEDIA_ROOT = BASE_DIR / 'media'  # MOD: Directori media
+AUTH_USER_MODEL = 'users.CustomUser'
 
-AUTH_USER_MODEL = 'users.CustomUser'  # MOD: Model d'usuari personalitzat (definir abans primer migrate)
+LOGIN_URL = 'users:login'
+LOGIN_REDIRECT_URL = 'users:profile'
+LOGOUT_REDIRECT_URL = 'home'
 
-LOGIN_URL = 'login'  # MOD: Nom URL login
-LOGIN_REDIRECT_URL = 'home'  # MOD: Destí després d'iniciar sessió
-LOGOUT_REDIRECT_URL = 'login'  # MOD: Destí després de tancar sessió
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+AUTH_PASSWORD_VALIDATORS = [
+    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
+    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
+]
+# Templates globals
+TEMPLATES[0]['DIRS'] = [BASE_DIR / 'templates']
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
