@@ -8,6 +8,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', lambda request: render(request, 'home.html'), name='home'),
     path('users/', include('users.urls')),
+    path('events/', include(('events.urls','events'), namespace='events')),
 ]
 
 if settings.DEBUG:

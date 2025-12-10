@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}Esdeveniments - StreamEvents{% endblock %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Esdeveniments</h2>
+
+  <!-- Cerca i filtres -->
+  <form method="get" class="row g-2 mb-3">
+    <div class="col-md-4">{{ form.search }}</div>
+    <div class="col-md-2">{{ form.category }}</div>
+    <div class="col-md-2">{{ form.status }}</div>
+    <div class="col-md-2">{{ form.date_from }}</div>
+    <div class="col-md-2">{{ form.date_to }}</div>
+    <div class="col-12 mt-2"><button class="btn btn-primary">Filtrar</button></div>
+  </form>
+
+  <!-- Destacats -->
+  {% if featured %}
+  <h5>Destacats</h5>
+  <div class="row">
+    {% for e in featured %}
+      <div class="col-md-3 mb-3">
+        {% include "events/includes/event_card.html" with event=e compact=True %}
+      </div>
+    {% endfor %}
+  </div>
+  <hr>
+  {% endif %}
+
+  <!-- Llistat -->
+  <div class="row">
+    {% for event in page_obj %}
+      <div class="col-md-4 mb-4">
+        {% include "events/includes/event_card.html" with event=event %}
+      </div>
+    {% empty %}
+      <p>No s'han trobat esdeveniments.</p>
+    {% endfor %}
+  </div>
+
+  <!-- Paginació -->
+  <nav>
+    <ul class="pagination">
+      {% if page_obj.has_previous %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a></li>
+      {% endif %}
+      <li class="page-item disabled"><span class="page-link">Pàgina {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span></li>
+      {% if page_obj.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Següent</a></li>
+      {% endif %}
+    </ul>
+  </nav>
+</div>
+{% endblock %}

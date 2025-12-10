@@ -1,0 +1,19 @@
+{# events/includes/event_card.html #}
+<div class="card h-100">
+  {% if event.thumbnail %}
+    <img src="{{ event.thumbnail.url }}" class="card-img-top" style="height:180px; object-fit:cover;">
+  {% else %}
+    <img src="https://via.placeholder.com/400x180?text={{ event.category }}" class="card-img-top">
+  {% endif %}
+  <div class="card-body d-flex flex-column">
+    <h5 class="card-title">{{ event.title }}</h5>
+    <p class="card-text small text-muted">{{ event.get_category_display }} • {{ event.scheduled_date|date:"d/m/Y H:i" }}</p>
+    <p class="card-text text-truncate">{{ event.description }}</p>
+    <div class="mt-auto">
+      <a href="{% url 'events:event_detail' event.pk %}" class="btn btn-sm btn-primary">Veure</a>
+      {% if not compact %}
+        <span class="badge bg-secondary ms-2">{{ event.get_status_display }}</span>
+      {% endif %}
+    </div>
+  </div>
+</div>

@@ -1,0 +1,50 @@
+[
+  {
+    "model": "events.event",
+    "pk": 1,
+    "fields": {
+      "title": "Torneig Gaming: nit de jocs",
+      "description": "Torneig de jocs en línia amb premis.",
+      "creator": 1,
+      "category": "gaming",
+      "scheduled_date": "2025-12-20T20:00:00Z",
+      "status": "scheduled",
+      "max_viewers": 500,
+      "is_featured": true,
+      "tags": "gaming,torneig,stream",
+      "stream_url": "https://www.twitch.tv/example"
+    }
+  },
+  {
+    "model": "events.event",
+    "pk": 2,
+    "fields": {
+      "title": "Concert Indie acústic",
+      "description": "Concert acústic en directe des de l'estudi.",
+      "creator": 2,
+      "category": "music",
+      "scheduled_date": "2025-11-30T19:30:00Z",
+      "status": "scheduled",
+      "max_viewers": 200,
+      "is_featured": false,
+      "tags": "música,indie,acústic",
+      "stream_url": "https://www.youtube.com/watch?v=abcdefghijk"
+    }
+  },
+  {
+    "model": "events.event",
+    "pk": 3,
+    "fields": {
+      "title": "Xerrada: Introducció a Django",
+      "description": "Sessió oberta sobre com començar amb Django.",
+      "creator": 1,
+      "category": "talk",
+      "scheduled_date": "2025-10-01T18:00:00Z",
+      "status": "finished",
+      "max_viewers": 150,
+      "is_featured": false,
+      "tags": "django,web,programació",
+      "stream_url": ""
+    }
+  }
+]
