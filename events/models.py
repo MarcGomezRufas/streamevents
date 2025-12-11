@@ -67,18 +67,22 @@ class Event(models.Model):
 
     @property
     def is_live(self):
-        return self.status == 'live'
+        now = timezone.now()
+        if self.status == 'live':
+            return True
+        if self.status == 'scheduled' and self.scheduled_date <= now:
+            duration = self.CATEGORY_DURATIONS.get(self.category, 90)
+            end_time = self.scheduled_date + timedelta(minutes=duration)
+            return now <= end_time
+        return False
 
     @property
     def is_upcoming(self):
         return self.status == 'scheduled' and self.scheduled_date > timezone.now()
 
     def get_duration(self):
-        """
-        Retorna durada en minuts segons categoria si està finalitzat.
-        Si no està finalitzat, retorna la durada prevista per categoria.
-        """
-        return timedelta(minutes=self.CATEGORY_DURATIONS.get(self.category, 90))
+        """Retorna la durada prevista en minuts segons la categoria."""
+        return self.CATEGORY_DURATIONS.get(self.category, 90)
 
     def get_tags_list(self):
         if not self.tags:
@@ -86,30 +90,24 @@ class Event(models.Model):
         return [t.strip() for t in self.tags.split(',') if t.strip()]
 
     def get_stream_embed_url(self):
-        """
-        Convertir urls de YouTube i Twitch a embed.
-        Retorna None si no es reconeix.
-        """
         if not self.stream_url:
             return None
 
         url = self.stream_url.strip()
 
-        # YouTube: detectar id
-        # https://www.youtube.com/watch?v=VIDEOID or https://youtu.be/VIDEOID
-        yt_match = re.search(r'(?:v=|\/)([0-9A-Za-z_-]{11})', url)
-        if 'youtube' in url or 'youtu.be' in url:
+        # YouTube
+        if 'youtube.com' in url or 'youtu.be' in url:
+            yt_match = re.search(r'(?:v=|\/)([0-9A-Za-z_-]{11})', url)
             if yt_match:
                 vid = yt_match.group(1)
                 return f"https://www.youtube.com/embed/{vid}"
             return None
 
-        # Twitch: convertir channel or video
-        # Ej: https://www.twitch.tv/channel
-        tw_match = re.search(r'twitch\.tv\/([A-Za-z0-9_]+)', url)
-        if 'twitch' in url and tw_match:
-            channel = tw_match.group(1)
-            return f"https://player.twitch.tv/?channel={channel}&parent=localhost"
-            # NOTE: parent param required in embed, adjust domain in production
-
+        # Twitch
+        if 'twitch.tv' in url:
+            tw_match = re.search(r'twitch\.tv\/([A-Za-z0-9_]+)', url)
+            if tw_match:
+                channel = tw_match.group(1)
+                # ⚠️ Canvia 'localhost' pel teu domini en producció
+                return f"https://player.twitch.tv/?channel={channel}&parent=localhost"
         return None

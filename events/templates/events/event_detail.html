@@ -5,7 +5,7 @@
   <div class="row">
     <div class="col-md-8">
       {% if event.thumbnail %}
-        <img src="{{ event.thumbnail.url }}" class="img-fluid mb-3">
+        <img src="{{ event.thumbnail.url }}" class="img-fluid mb-3 rounded">
       {% endif %}
       <h2>{{ event.title }}</h2>
       <p class="text-muted">{{ event.get_category_display }} • {{ event.scheduled_date|date:"d/m/Y H:i" }}</p>
@@ -14,7 +14,7 @@
       {% if event.tags %}
         <p>
           {% for tag in event.get_tags_list %}
-            <span class="badge bg-info text-dark">{{ tag }}</span>
+            <span class="badge bg-info text-dark me-1">{{ tag }}</span>
           {% endfor %}
         </p>
       {% endif %}
@@ -29,15 +29,23 @@
     <div class="col-md-4">
       <div class="card p-3">
         <p><strong>Creador:</strong> <a href="{% url 'users:public_profile' event.creator.username %}">{{ event.creator.display_name|default:event.creator.username }}</a></p>
-        <p><strong>Estat:</strong> {{ event.get_status_display }}</p>
+        <p><strong>Estat:</strong> 
+          {% if event.is_live %}
+            <span class="badge bg-success">En Directe</span>
+          {% elif event.is_upcoming %}
+            <span class="badge bg-warning">Programat</span>
+          {% else %}
+            <span class="badge bg-secondary">{{ event.get_status_display }}</span>
+          {% endif %}
+        </p>
         <p><strong>Max espectadors:</strong> {{ event.max_viewers }}</p>
         <p><strong>Destacat:</strong> {{ event.is_featured|yesno:"Sí,No" }}</p>
 
         {% if is_creator %}
           <a class="btn btn-primary w-100 mb-2" href="{% url 'events:event_update' event.pk %}">Editar</a>
-          <form method="post" action="{% url 'events:event_delete' event.pk %}">
+          <form method="post" action="{% url 'events:event_delete' event.pk %}" class="d-grid">
             {% csrf_token %}
-            <button class="btn btn-danger w-100">Eliminar</button>
+            <button class="btn btn-danger w-100" type="submit">Eliminar</button>
           </form>
         {% endif %}
       </div>

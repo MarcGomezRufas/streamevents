@@ -5,19 +5,22 @@
   <h2>Esdeveniments</h2>
 
   <!-- Cerca i filtres -->
-  <form method="get" class="row g-2 mb-3">
+  <form method="get" class="row g-2 mb-4">
     <div class="col-md-4">{{ form.search }}</div>
     <div class="col-md-2">{{ form.category }}</div>
     <div class="col-md-2">{{ form.status }}</div>
     <div class="col-md-2">{{ form.date_from }}</div>
     <div class="col-md-2">{{ form.date_to }}</div>
-    <div class="col-12 mt-2"><button class="btn btn-primary">Filtrar</button></div>
+    <div class="col-12 mt-2">
+      <button class="btn btn-primary">Filtrar</button>
+      <a href="{% url 'events:event_list' %}" class="btn btn-outline-secondary ms-2">Netejar</a>
+    </div>
   </form>
 
   <!-- Destacats -->
   {% if featured %}
-  <h5>Destacats</h5>
-  <div class="row">
+  <h5 class="mb-3">✨ Esdeveniments destacats</h5>
+  <div class="row mb-4">
     {% for e in featured %}
       <div class="col-md-3 mb-3">
         {% include "events/includes/event_card.html" with event=e compact=True %}
@@ -27,28 +30,32 @@
   <hr>
   {% endif %}
 
-  <!-- Llistat -->
+  <!-- Llistat normal -->
   <div class="row">
     {% for event in page_obj %}
-      <div class="col-md-4 mb-4">
-        {% include "events/includes/event_card.html" with event=event %}
-      </div>
+      {% if not event.is_featured or not featured %}
+        <div class="col-md-4 mb-4">
+          {% include "events/includes/event_card.html" with event=event %}
+        </div>
+      {% endif %}
     {% empty %}
-      <p>No s'han trobat esdeveniments.</p>
+      <p class="text-muted">No s'han trobat esdeveniments.</p>
     {% endfor %}
   </div>
 
   <!-- Paginació -->
-  <nav>
-    <ul class="pagination">
+  {% if page_obj.has_other_pages %}
+  <nav aria-label="Paginació">
+    <ul class="pagination justify-content-center">
       {% if page_obj.has_previous %}
-        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a></li>
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET %}&{{ request.GET.urlencode }}{% endif %}">Anterior</a></li>
       {% endif %}
-      <li class="page-item disabled"><span class="page-link">Pàgina {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span></li>
+      <li class="page-item disabled"><span class="page-link">Pàg. {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span></li>
       {% if page_obj.has_next %}
-        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Següent</a></li>
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET %}&{{ request.GET.urlencode }}{% endif %}">Següent</a></li>
       {% endif %}
     </ul>
   </nav>
+  {% endif %}
 </div>
 {% endblock %}

@@ -7,42 +7,45 @@
       {% csrf_token %}
       {{ form.non_field_errors }}
       <div class="mb-3">
-        <label class="form-label">Títol</label>
+        <label class="form-label">Títol *</label>
         {{ form.title }}
         {{ form.title.errors }}
       </div>
       <div class="mb-3">
-        <label class="form-label">Descripció</label>
+        <label class="form-label">Descripció *</label>
         {{ form.description }}
+        {{ form.description.errors }}
       </div>
       <div class="row">
         <div class="col-md-6 mb-3">
-          <label class="form-label">Categoria</label>
+          <label class="form-label">Categoria *</label>
           {{ form.category }}
         </div>
         <div class="col-md-6 mb-3">
-          <label class="form-label">Data i hora</label>
+          <label class="form-label">Data i hora *</label>
           {{ form.scheduled_date }}
         </div>
       </div>
       <div class="mb-3">
         <label class="form-label">Thumbnail</label><br>
         {% if event and event.thumbnail %}
-          <img src="{{ event.thumbnail.url }}" style="max-width:180px;" class="mb-2">
+          <img src="{{ event.thumbnail.url }}" class="img-thumbnail mb-2" style="max-width:180px;">
         {% endif %}
         {{ form.thumbnail }}
       </div>
       <div class="mb-3">
-        <label class="form-label">Max espectadors</label>
+        <label class="form-label">Màxim espectadors (1–1000) *</label>
         {{ form.max_viewers }}
       </div>
       <div class="mb-3">
-        <label class="form-label">Tags</label>
+        <label class="form-label">Etiquetes (opcional)</label>
         {{ form.tags }}
+        <small class="form-text text-muted">Separades per comes, ex: música, indie, piano</small>
       </div>
       <div class="mb-3">
-        <label class="form-label">URL streaming (YouTube/Twitch)</label>
+        <label class="form-label">URL de streaming (YouTube/Twitch)</label>
         {{ form.stream_url }}
+        <small class="form-text text-muted">Ex: https://youtu.be/dQw4w9WgXcQ</small>
       </div>
       <button class="btn btn-primary" type="submit">Desar</button>
       <a href="{% url 'events:event_list' %}" class="btn btn-secondary ms-2">Cancel·lar</a>
