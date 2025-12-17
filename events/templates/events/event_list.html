@@ -14,12 +14,13 @@
     <div class="col-12 mt-2">
       <button class="btn btn-primary">Filtrar</button>
       <a href="{% url 'events:event_list' %}" class="btn btn-outline-secondary ms-2">Netejar</a>
+      <a href="{% url 'events:event_create' %}" class="btn btn-success float-end">Crear esdeveniment</a>
     </div>
   </form>
 
   <!-- Destacats -->
   {% if featured %}
-  <h5 class="mb-3">✨ Esdeveniments destacats</h5>
+  <h5 class="mb-3">Esdeveniments destacats</h5>
   <div class="row mb-4">
     {% for e in featured %}
       <div class="col-md-3 mb-3">
