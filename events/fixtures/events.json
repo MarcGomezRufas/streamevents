@@ -46,5 +46,53 @@
       "tags": "django,web,programació",
       "stream_url": ""
     }
+  },
+  {
+    "model": "events.event",
+    "pk": 4,
+    "fields": {
+      "title": "Concert de Jazz en directe",
+      "description": "Un concert de jazz en directe des del club local.",
+      "creator": 2,
+      "category": "music",
+      "scheduled_date": "2025-11-28T21:00:00Z",
+      "status": "scheduled",
+      "max_viewers": 100,
+      "is_featured": true,
+      "tags": "jazz,música,en directe",
+      "stream_url": "https://www.youtube.com/watch?v=abcdefghijk"
+    }
+  },
+  {
+    "model": "events.event",
+    "pk": 5,
+    "fields": {
+      "title": "Torneig de Videojocs: Competició Final",
+      "description": "La gran final del torneig de videojocs. Els millors jugadors competiran per la victòria final.",
+      "creator": 1,
+      "category": "gaming",
+      "scheduled_date": "2025-12-15T18:00:00Z",
+      "status": "scheduled",
+      "max_viewers": 500,
+      "is_featured": true,
+      "tags": "gaming,torneig,videojocs,competició",
+      "stream_url": "https://www.twitch.tv/example"
+    }
+  },
+  {
+    "model": "events.event",
+    "pk": 6,
+    "fields": {
+      "title": "Taller de Fotografia Digital",
+      "description": "Aprèn les millors tècniques de fotografia digital amb el reconegut fotògraf Marc Soler.",
+      "creator": 2,
+      "category": "education",
+      "scheduled_date": "2025-12-05T17:30:00Z",
+      "status": "scheduled",
+      "max_viewers": 80,
+      "is_featured": false,
+      "tags": "fotografia,educació,taller,digital",
+      "stream_url": "https://www.youtube.com/watch?v=abcdefghijk"
+    }
   }
 ]

@@ -1,0 +1,84 @@
+/* xat/static/xat/css/xat.css */
+.xat-container {
+    height: 600px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    background: white;
+}
+
+.xat-header {
+    background-color: #f8f9fa;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.xat-messages {
+    flex: 1;
+    overflow-y: auto;
+    max-height: 450px;
+    padding: 15px;
+}
+
+.xat-message {
+    background-color: #f8f9fa;
+    padding: 10px;
+    margin-bottom: 8px;
+    border-radius: 6px;
+}
+
+.xat-message.highlighted {
+    background-color: #fff3cd;
+    border-left: 4px solid #ffc107;
+}
+
+.message-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+}
+
+.message-content {
+    word-wrap: break-word;
+    line-height: 1.4;
+}
+
+.message-actions {
+    text-align: right;
+    margin-top: 6px;
+}
+
+.xat-form {
+    padding: 15px;
+    border-top: 1px solid #dee2e6;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.xat-form textarea {
+    resize: none;
+}
+
+/* Responsive */
+@media (max-width: 991.98px) {
+    .xat-container {
+        height: 400px;
+        margin-top: 20px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .xat-container {
+        height: 350px;
+    }
+
+    .xat-header,
+    .xat-form {
+        padding: 10px;
+    }
+}

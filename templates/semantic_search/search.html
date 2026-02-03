@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="mx-4">Cerca semàntica</h2>
+
+<form method="get">
+  <input type="text" class="mx-4" name="q" value="{{ query }}" placeholder="Ex: concert de jazz aquest cap de setmana" style="width:60%;">
+  <label style="margin-left:10px;">
+    <input type="checkbox" name="future" value="0" {% if only_future %}checked{% endif %}>
+    Només futurs
+  </label>
+  <button type="submit" class="m-4">Cercar</button>
+</form>
+
+{% if query %}
+  <p class="mx-4">Model: {{ embedding_model }}</p>
+  <h3 class="mx-4">Resultats</h3>
+  {% if results %}
+    <ul class="mx-4">
+      {% for event, score in results %}
+        <li>
+          <a href="{{ event.get_absolute_url }}">{{ event.title }}</a>
+          — {{ event.scheduled_date }}
+          — score: {{ score|floatformat:3 }}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>Cap resultat.</p>
+  {% endif %}
+{% endif %}
+{% endblock %}

@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users',
     'events',
+    'xat',
+    'semantic_search',
 ]
 
 MIDDLEWARE = [

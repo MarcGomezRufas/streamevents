@@ -1,5 +1,6 @@
 # events/models.py
 from django.db import models
+from djongo import models as djongo_models
 from django.urls import reverse
 from django.conf import settings
 from django.utils import timezone
@@ -53,6 +54,11 @@ class Event(models.Model):
         'art': 120,
         'other': 90,
     }
+
+    embedding = models.TextField(blank=True, null=True)  # Stores JSON list of floats
+    embedding_model = models.CharField(max_length=200, blank=True, null=True)
+    embedding_updated_at = models.DateTimeField(blank=True, null=True)
+
 
     class Meta:
         ordering = ['-created_at']

@@ -7,6 +7,7 @@ from django.utils import timezone
 from django.db.models import Q
 from .models import Event
 from .forms import EventCreationForm, EventUpdateForm, EventSearchForm
+from xat.forms import XatMessageForm
 
 def event_list_view(request):
     form = EventSearchForm(request.GET or None)
@@ -50,10 +51,12 @@ def event_detail_view(request, pk):
     event = get_object_or_404(Event.objects.select_related('creator'), pk=pk)
     is_creator = request.user.is_authenticated and (request.user == event.creator)
     embed_url = event.get_stream_embed_url()
+    xat_form = XatMessageForm() if request.user.is_authenticated and event.status == 'live' else None
     return render(request, 'events/event_detail.html', {
         'event': event,
         'is_creator': is_creator,
-        'embed_url': embed_url
+        'embed_url': embed_url,
+        'xat_form': xat_form,
     })
 
 @login_required

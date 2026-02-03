@@ -10,6 +10,8 @@ urlpatterns = [
     path('', lambda request: render(request, 'home.html'), name='home'),
     path('users/', include('users.urls')),
     path('events/', include('events.urls')),
+    path('xat/', include('xat.urls')),
+    path("", include("semantic_search.urls")),
 ]
 
 if settings.DEBUG:

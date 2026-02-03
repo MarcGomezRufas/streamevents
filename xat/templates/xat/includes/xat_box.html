@@ -1,0 +1,33 @@
+{% if event %}
+<div class="xat-container" data-event-id="{{ event.id }}">
+  <div class="xat-header">
+    <h6 class="mb-0">💬 Xat en Directe</h6>
+    <span id="message-count" class="badge bg-secondary ms-2">0</span>
+  </div>
+  
+  <div id="xat-messages" class="xat-messages">
+    <p class="text-muted">Carregant missatges...</p>
+  </div>
+
+  {% if xat_form and event.status == 'live' %}
+    <form id="xat-form" class="xat-form">
+      {% csrf_token %}
+      {{ xat_form.message }}
+      <button type="submit" class="btn btn-primary btn-sm mt-2">Enviar</button>
+      <div id="xat-errors" class="text-danger small mt-1"></div>
+    </form>
+  {% elif not request.user.is_authenticated %}
+    <div class="xat-form text-center py-3">
+      <p class="text-muted">Inicia sessió per participar</p>
+    </div>
+  {% elif event.status != 'live' %}
+    <div class="xat-form text-center py-3">
+      <p class="text-muted">El xat només està disponible durant l'esdeveniment</p>
+    </div>
+  {% endif %}
+</div>
+
+<script>
+  const eventId = document.querySelector('.xat-container').dataset.eventId;
+</script>
+{% endif %}
