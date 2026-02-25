@@ -8,6 +8,23 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'events:event_list' %}">
+                        <i class="fas fa-calendar-alt"></i> Esdeveniments
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'semantic_search:semantic' %}">
+                        <i class="fas fa-search"></i> Cerca
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'assistant_chat:page' %}">
+                        <i class="fas fa-robot"></i> Assistent
+                    </a>
+                </li>
+            </ul>
             <ul class="navbar-nav ms-auto">
                 {% if user.is_authenticated %}
                     <li class="nav-item">

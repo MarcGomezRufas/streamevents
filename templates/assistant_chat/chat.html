@@ -1,0 +1,392 @@
+{% extends "base.html" %}
+
+{% block title %}Assistent d'Esdeveniments — StreamEvents{% endblock %}
+
+{% block extra_css %}
+{{ block.super }}
+<style>
+    .chat-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .chat-header {
+        background: linear-gradient(135deg, var(--primary-color), #818cf8);
+        color: white;
+        border-radius: 12px 12px 0 0;
+        padding: 20px 24px;
+    }
+
+    .chat-header h2 {
+        margin: 0;
+        font-size: 1.4rem;
+    }
+
+    .chat-header p {
+        margin: 4px 0 0;
+        opacity: 0.85;
+        font-size: 0.9rem;
+    }
+
+    .chat-body {
+        background: #f8f9fa;
+        border-left: 1px solid #dee2e6;
+        border-right: 1px solid #dee2e6;
+        min-height: 350px;
+        max-height: 500px;
+        overflow-y: auto;
+        padding: 20px;
+    }
+
+    .chat-message {
+        margin-bottom: 16px;
+        display: flex;
+        gap: 10px;
+    }
+
+    .chat-message.user {
+        flex-direction: row-reverse;
+    }
+
+    .chat-message .bubble {
+        max-width: 75%;
+        padding: 12px 16px;
+        border-radius: 16px;
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+
+    .chat-message.user .bubble {
+        background: var(--primary-color);
+        color: white;
+        border-bottom-right-radius: 4px;
+    }
+
+    .chat-message.assistant .bubble {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-bottom-left-radius: 4px;
+    }
+
+    .chat-message .avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.85rem;
+        flex-shrink: 0;
+    }
+
+    .chat-message.user .avatar {
+        background: var(--secondary-color);
+        color: white;
+    }
+
+    .chat-message.assistant .avatar {
+        background: #e0e7ff;
+        color: var(--primary-color);
+    }
+
+    .chat-footer {
+        background: white;
+        border: 1px solid #dee2e6;
+        border-top: none;
+        border-radius: 0 0 12px 12px;
+        padding: 16px;
+    }
+
+    .chat-input-group {
+        display: flex;
+        gap: 10px;
+    }
+
+    .chat-input-group input {
+        flex: 1;
+        border-radius: 20px;
+        padding: 10px 18px;
+        border: 1px solid #d1d5db;
+        outline: none;
+        transition: border-color 0.2s;
+    }
+
+    .chat-input-group input:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+    }
+
+    .chat-input-group button {
+        border-radius: 20px;
+        padding: 10px 20px;
+        font-weight: 500;
+    }
+
+    .event-card {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        padding: 14px 16px;
+        margin-top: 10px;
+        transition: box-shadow 0.2s, transform 0.15s;
+    }
+
+    .event-card:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transform: translateY(-1px);
+    }
+
+    .event-card .event-title {
+        font-weight: 600;
+        color: var(--primary-color);
+        text-decoration: none;
+    }
+
+    .event-card .event-title:hover {
+        text-decoration: underline;
+    }
+
+    .event-card .event-meta {
+        font-size: 0.82rem;
+        color: #6b7280;
+        margin-top: 4px;
+    }
+
+    .event-card .badge-score {
+        background: #e0e7ff;
+        color: var(--primary-color);
+        font-size: 0.75rem;
+        padding: 3px 8px;
+        border-radius: 10px;
+    }
+
+    .typing-indicator {
+        display: inline-flex;
+        gap: 4px;
+        padding: 8px 12px;
+    }
+
+    .typing-indicator span {
+        width: 8px;
+        height: 8px;
+        background: #9ca3af;
+        border-radius: 50%;
+        animation: typing 1.4s infinite ease-in-out;
+    }
+
+    .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes typing {
+        0%, 80%, 100% { transform: scale(0.6); opacity: 0.5; }
+        40% { transform: scale(1); opacity: 1; }
+    }
+
+    .follow-up {
+        background: #fef3c7;
+        border-left: 3px solid #f59e0b;
+        padding: 10px 14px;
+        border-radius: 0 8px 8px 0;
+        margin-top: 10px;
+        font-size: 0.9rem;
+    }
+
+    .options-bar {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 8px 0;
+        font-size: 0.88rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="chat-container">
+        <!-- Header -->
+        <div class="chat-header">
+            <h2><i class="fas fa-robot"></i> Assistent d'Esdeveniments</h2>
+            <p>Pregunta'm sobre esdeveniments — et recomanare els millors!</p>
+        </div>
+
+        <!-- Opcions -->
+        <div class="options-bar px-3 py-2" style="background: #eef2ff; border-left: 1px solid #dee2e6; border-right: 1px solid #dee2e6;">
+            <label class="form-check-label" style="cursor:pointer;">
+                <input id="onlyFuture" class="form-check-input" type="checkbox" checked>
+                Nomes futurs
+            </label>
+        </div>
+
+        <!-- Messages area -->
+        <div class="chat-body" id="chatBody">
+            <div class="chat-message assistant">
+                <div class="avatar"><i class="fas fa-robot"></i></div>
+                <div class="bubble">
+                    Hola! Soc l'assistent de StreamEvents. Pots preguntar-me coses com:
+                    <ul class="mb-0 mt-1" style="font-size:0.88rem;">
+                        <li>"Vull un concert de jazz"</li>
+                        <li>"Torneig de videojocs"</li>
+                        <li>"Esdeveniments de musica"</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Input -->
+        <div class="chat-footer">
+            <div class="chat-input-group">
+                <input id="msgInput" type="text" placeholder="Escriu la teva consulta..." autocomplete="off">
+                <button id="sendBtn" class="btn btn-primary" onclick="sendMessage()">
+                    <i class="fas fa-paper-plane"></i> Enviar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const chatBody = document.getElementById("chatBody");
+    const msgInput = document.getElementById("msgInput");
+    const sendBtn  = document.getElementById("sendBtn");
+
+    function scrollToBottom() {
+        chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    function addMessage(role, html) {
+        const div = document.createElement("div");
+        div.className = "chat-message " + role;
+
+        const avatar = document.createElement("div");
+        avatar.className = "avatar";
+        avatar.innerHTML = role === "user"
+            ? '<i class="fas fa-user"></i>'
+            : '<i class="fas fa-robot"></i>';
+
+        const bubble = document.createElement("div");
+        bubble.className = "bubble";
+        bubble.innerHTML = html;
+
+        div.appendChild(avatar);
+        div.appendChild(bubble);
+        chatBody.appendChild(div);
+        scrollToBottom();
+        return bubble;
+    }
+
+    function showTyping() {
+        const div = document.createElement("div");
+        div.className = "chat-message assistant";
+        div.id = "typing";
+
+        div.innerHTML = `
+            <div class="avatar"><i class="fas fa-robot"></i></div>
+            <div class="bubble">
+                <div class="typing-indicator">
+                    <span></span><span></span><span></span>
+                </div>
+            </div>
+        `;
+        chatBody.appendChild(div);
+        scrollToBottom();
+    }
+
+    function removeTyping() {
+        const el = document.getElementById("typing");
+        if (el) el.remove();
+    }
+
+    function buildEventCards(events) {
+        if (!events || events.length === 0) return "";
+
+        let html = '<div style="margin-top:12px;">';
+        events.forEach(ev => {
+            const dateStr = ev.scheduled_date
+                ? new Date(ev.scheduled_date).toLocaleString("ca-ES", {
+                    day: "numeric", month: "short", year: "numeric",
+                    hour: "2-digit", minute: "2-digit"
+                  })
+                : "Sense data";
+            html += `
+                <div class="event-card">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <a href="${ev.url}" class="event-title">${ev.title}</a>
+                        <span class="badge-score">${(ev.score * 100).toFixed(0)}%</span>
+                    </div>
+                    <div class="event-meta">
+                        <i class="fas fa-tag"></i> ${ev.category}
+                        &nbsp;|&nbsp;
+                        <i class="fas fa-calendar"></i> ${dateStr}
+                        ${ev.tags ? ' &nbsp;|&nbsp; <i class="fas fa-hashtag"></i> ' + ev.tags : ''}
+                    </div>
+                </div>
+            `;
+        });
+        html += '</div>';
+        return html;
+    }
+
+    async function sendMessage() {
+        const message = msgInput.value.trim();
+        if (!message) return;
+
+        const onlyFuture = document.getElementById("onlyFuture").checked;
+
+        // Mostrem missatge de l'usuari
+        addMessage("user", escapeHtml(message));
+        msgInput.value = "";
+        sendBtn.disabled = true;
+        msgInput.disabled = true;
+
+        showTyping();
+
+        try {
+            const res = await fetch("/assistant/api/chat/", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({message, only_future: onlyFuture}),
+            });
+
+            const data = await res.json();
+            removeTyping();
+
+            if (data.error) {
+                addMessage("assistant", `<span class="text-danger">${escapeHtml(data.error)}</span>`);
+            } else {
+                let responseHtml = escapeHtml(data.answer || "");
+                responseHtml += buildEventCards(data.events);
+
+                if (data.follow_up) {
+                    responseHtml += `<div class="follow-up"><i class="fas fa-lightbulb"></i> ${escapeHtml(data.follow_up)}</div>`;
+                }
+
+                addMessage("assistant", responseHtml);
+            }
+        } catch (err) {
+            removeTyping();
+            addMessage("assistant", `<span class="text-danger">Error de connexio: ${escapeHtml(err.message)}</span>`);
+        } finally {
+            sendBtn.disabled = false;
+            msgInput.disabled = false;
+            msgInput.focus();
+        }
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement("div");
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    // Enter per enviar
+    msgInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
+</script>
+{% endblock %}

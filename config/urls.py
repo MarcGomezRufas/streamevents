@@ -12,6 +12,7 @@ urlpatterns = [
     path('events/', include('events.urls')),
     path('xat/', include('xat.urls')),
     path("", include("semantic_search.urls")),
+    path("", include("assistant_chat.urls")),
 ]
 
 if settings.DEBUG:
